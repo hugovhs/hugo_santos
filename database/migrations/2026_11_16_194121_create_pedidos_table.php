@@ -20,7 +20,7 @@ return new class extends Migration
             $table->decimal('impuestos', 10, 2);
             $table->decimal('total', 10, 2);
             $table->string('estatus'); // creado, procesado, enviado, entregado, cancelado
-            $table->date_time('fecha')->default(now());
+            $table->dateTime('fecha')->default(now());
         });
     }
 
