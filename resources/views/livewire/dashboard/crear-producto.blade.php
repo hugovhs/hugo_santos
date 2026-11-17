@@ -79,10 +79,12 @@
                         id="nombre"
                         type="text"
                         wire:model.live.debounce.400ms="nombre"
+                        oninput="this.value = this.value.replace(/[áàäâãå]/g, 'a').replace(/[ÁÀÄÂÃÅ]/g, 'A').replace(/[éèëê]/g, 'e').replace(/[ÉÈËÊ]/g, 'E').replace(/[íìïî]/g, 'i').replace(/[ÍÌÏÎ]/g, 'I').replace(/[óòöôõ]/g, 'o').replace(/[ÓÒÖÔÕ]/g, 'O').replace(/[úùüû]/g, 'u').replace(/[ÚÙÜÛ]/g, 'U').replace(/ñ/g, 'n').replace(/Ñ/g, 'N').replace(/ç/g, 'c').replace(/Ç/g, 'C').replace(/[^A-Za-z0-9 ]/g, '')"
                         placeholder="Nombre del producto"
                         autocomplete="off"
                         class="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm transition focus:outline-none focus:ring-2 {{ $errors->has('nombre') ? 'border-rose-400 focus:border-rose-500 focus:ring-rose-100' : 'border-slate-300 focus:border-indigo-500 focus:ring-indigo-100' }}"
                     >
+                    <p class="mt-1 text-xs text-slate-400">Sin acentos ni caracteres especiales.</p>
                     @error('nombre')
                         <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
                     @enderror

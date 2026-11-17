@@ -55,6 +55,18 @@ class CrearProducto extends Component
             $this->fecha_vigencia = null;
         }
 
+        if ($property === 'nombre') {
+            $normalizado = $this->normalizarNombre((string) $this->nombre);
+
+            if ($normalizado !== $this->nombre) {
+                $this->nombre = $normalizado;
+            }
+
+            $this->validateOnly($property);
+
+            return;
+        }
+
         if (in_array($property, ['precio_usd', 'precio_mxn'], true)) {
             $this->convertirPrecio($property);
 
@@ -82,6 +94,8 @@ class CrearProducto extends Component
 
     public function guardar()
     {
+        $this->nombre = $this->normalizarNombre((string) $this->nombre);
+
         $validated = $this->validate();
 
         // Guarda la imagen en disco (storage/app/public/products)
@@ -148,11 +162,41 @@ class CrearProducto extends Component
         return $this->tipoCambio;
     }
 
+    /**
+     * Elimina caracteres especiales y reemplaza acentos.
+     * Solo conserva [A-Za-z0-9 ].
+     * 
+     */
+    protected function normalizarNombre(string $valor): string
+    {
+        $valor = strtr($valor, [
+            'á' => 'a', 'à' => 'a', 'ä' => 'a', 'â' => 'a', 'ã' => 'a', 'å' => 'a',
+            'Á' => 'A', 'À' => 'A', 'Ä' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Å' => 'A',
+            'é' => 'e', 'è' => 'e', 'ë' => 'e', 'ê' => 'e',
+            'É' => 'E', 'È' => 'E', 'Ë' => 'E', 'Ê' => 'E',
+            'í' => 'i', 'ì' => 'i', 'ï' => 'i', 'î' => 'i',
+            'Í' => 'I', 'Ì' => 'I', 'Ï' => 'I', 'Î' => 'I',
+            'ó' => 'o', 'ò' => 'o', 'ö' => 'o', 'ô' => 'o', 'õ' => 'o',
+            'Ó' => 'O', 'Ò' => 'O', 'Ö' => 'O', 'Ô' => 'O', 'Õ' => 'O',
+            'ú' => 'u', 'ù' => 'u', 'ü' => 'u', 'û' => 'u',
+            'Ú' => 'U', 'Ù' => 'U', 'Ü' => 'U', 'Û' => 'U',
+            'ñ' => 'n', 'Ñ' => 'N', 'ç' => 'c', 'Ç' => 'C',
+        ]);
+
+        // Elimina todo lo que no sea letra sin acento, número o espacio.
+        $valor = (string) preg_replace('/[^A-Za-z0-9 ]+/', '', $valor);
+
+        // Elimina espacios adicionales
+        $valor = (string) preg_replace('/\s+/', ' ', $valor);
+
+        return trim($valor);
+    }
+
     protected function rules(): array
     {
         return [
             'sku' => ['required', 'string', 'max:255', 'unique:productos,sku'],
-            'nombre' => ['required', 'string', 'max:255'],
+            'nombre' => ['required', 'string', 'max:255', 'regex:/^[A-Za-z0-9 ]+$/'],
             'descripcion_corta' => ['nullable', 'string', 'max:500'],
             'descripcion_larga' => ['nullable', 'string', 'max:2000'],
             'imagen' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
@@ -172,6 +216,7 @@ class CrearProducto extends Component
             'sku.max' => 'El SKU no debe exceder 255 caracteres.',
             'nombre.required' => 'El nombre es obligatorio.',
             'nombre.max' => 'El nombre no debe exceder 255 caracteres.',
+            'nombre.regex' => 'El nombre solo puede contener letras sin acento, números y espacios.',
             'descripcion_corta.max' => 'La descripción corta no debe exceder 500 caracteres.',
             'descripcion_larga.max' => 'La descripción larga no debe exceder 2000 caracteres.',
             'imagen.image' => 'El archivo debe ser una imagen.',
