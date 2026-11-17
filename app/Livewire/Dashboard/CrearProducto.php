@@ -51,10 +51,6 @@ class CrearProducto extends Component
      */
     public function updated($property): void
     {
-        if ($property === 'fecha_vigencia' && $this->fecha_vigencia === '') {
-            $this->fecha_vigencia = null;
-        }
-
         if ($property === 'nombre') {
             $normalizado = $this->normalizarNombre((string) $this->nombre);
 
@@ -94,6 +90,10 @@ class CrearProducto extends Component
 
     public function guardar()
     {
+        if ($this->fecha_vigencia === '') {
+            $this->fecha_vigencia = null;
+        }
+
         $this->nombre = $this->normalizarNombre((string) $this->nombre);
 
         $validated = $this->validate();
@@ -197,14 +197,14 @@ class CrearProducto extends Component
         return [
             'sku' => ['required', 'string', 'max:255', 'unique:productos,sku'],
             'nombre' => ['required', 'string', 'max:255', 'regex:/^[A-Za-z0-9 ]+$/'],
-            'descripcion_corta' => ['nullable', 'string', 'max:500'],
-            'descripcion_larga' => ['nullable', 'string', 'max:2000'],
-            'imagen' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'descripcion_corta' => ['required', 'string', 'max:500'],
+            'descripcion_larga' => ['required', 'string', 'max:2000'],
+            'imagen' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'precio_usd' => ['required', 'numeric', 'min:0.01', 'max:99999999.99'],
             'precio_mxn' => ['required', 'numeric', 'min:0.01', 'max:99999999.99'],
             'stock' => ['required', 'integer', 'min:0', 'max:999999999'],
-            'fecha_vigencia' => ['nullable', 'date'],
-            'activo' => ['boolean'],
+            'fecha_vigencia' => ['required', 'date'],
+            'activo' => ['required', 'boolean'],
         ];
     }
 
@@ -217,8 +217,11 @@ class CrearProducto extends Component
             'nombre.required' => 'El nombre es obligatorio.',
             'nombre.max' => 'El nombre no debe exceder 255 caracteres.',
             'nombre.regex' => 'El nombre solo puede contener letras sin acento, números y espacios.',
+            'descripcion_corta.required' => 'La descripción corta es obligatoria.',
             'descripcion_corta.max' => 'La descripción corta no debe exceder 500 caracteres.',
+            'descripcion_larga.required' => 'La descripción larga es obligatoria.',
             'descripcion_larga.max' => 'La descripción larga no debe exceder 2000 caracteres.',
+            'imagen.required' => 'La imagen es obligatoria.',
             'imagen.image' => 'El archivo debe ser una imagen.',
             'imagen.mimes' => 'La imagen debe ser un archivo JPG, JPEG, PNG o WebP.',
             'imagen.max' => 'La imagen no debe pesar más de 2 MB.',
@@ -235,7 +238,9 @@ class CrearProducto extends Component
             'stock.integer' => 'El stock debe ser un número entero.',
             'stock.min' => 'El stock no puede ser negativo.',
             'stock.max' => 'El stock es demasiado grande.',
+            'fecha_vigencia.required' => 'La fecha de vigencia es obligatoria.',
             'fecha_vigencia.date' => 'La fecha de vigencia no es válida.',
+            'activo.required' => 'El estatus es obligatorio.',
         ];
     }
 

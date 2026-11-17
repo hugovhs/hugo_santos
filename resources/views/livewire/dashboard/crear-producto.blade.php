@@ -157,7 +157,7 @@
 
                 {{-- Fecha de vigencia --}}
                 <div>
-                    <label for="fecha_vigencia" class="block text-sm font-medium text-slate-700">Fecha de vigencia</label>
+                    <label for="fecha_vigencia" class="block text-sm font-medium text-slate-700">Fecha de vigencia <span class="text-rose-500">*</span></label>
                     <input
                         id="fecha_vigencia"
                         type="date"
@@ -172,7 +172,7 @@
                 {{-- Descripción corta --}}
                 <div class="sm:col-span-2" x-data>
                     <div class="flex items-center justify-between">
-                        <label for="descripcion_corta" class="block text-sm font-medium text-slate-700">Descripción corta</label>
+                        <label for="descripcion_corta" class="block text-sm font-medium text-slate-700">Descripción corta <span class="text-rose-500">*</span></label>
                         <span class="text-xs text-slate-400">
                             <span x-text="($wire.descripcion_corta ?? '').length">0</span>/500
                         </span>
@@ -193,7 +193,7 @@
                 {{-- Descripción larga --}}
                 <div class="sm:col-span-2" x-data>
                     <div class="flex items-center justify-between">
-                        <label for="descripcion_larga" class="block text-sm font-medium text-slate-700">Descripción larga</label>
+                        <label for="descripcion_larga" class="block text-sm font-medium text-slate-700">Descripción larga <span class="text-rose-500">*</span></label>
                         <span class="text-xs text-slate-400">
                             <span x-text="($wire.descripcion_larga ?? '').length">0</span>/2000
                         </span>
@@ -213,7 +213,7 @@
 
                 {{-- Imagen del producto --}}
                 <div class="sm:col-span-2">
-                    <label for="imagen" class="block text-sm font-medium text-slate-700">Imagen del producto</label>
+                    <label for="imagen" class="block text-sm font-medium text-slate-700">Imagen del producto <span class="text-rose-500">*</span></label>
                     <input
                         id="imagen"
                         type="file"
@@ -260,7 +260,7 @@
                             wire:model.live="activo"
                             class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
                         >
-                        <span class="text-sm font-medium text-slate-700">Producto activo</span>
+                        <span class="text-sm font-medium text-slate-700">Producto activo <span class="text-rose-500">*</span></span>
                     </label>
                     <p class="mt-1 text-xs text-slate-400">Los productos inactivos no se muestran en la tienda.</p>
                     @error('activo')
