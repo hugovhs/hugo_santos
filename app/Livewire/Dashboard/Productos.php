@@ -19,6 +19,8 @@ class Productos extends Component
 
     public ?int $productoToggleId = null;
 
+    public ?int $productoEliminarId = null;
+
     public function verDetalle(int $id): void
     {
         $this->productoDetalleId = $id;
@@ -37,6 +39,46 @@ class Productos extends Component
     public function cancelarToggleActivo(): void
     {
         $this->productoToggleId = null;
+    }
+
+    public function confirmarEliminar(int $id): void
+    {
+        $this->productoEliminarId = $id;
+    }
+
+    public function cancelarEliminar(): void
+    {
+        $this->productoEliminarId = null;
+    }
+
+    public function eliminar(): void
+    {
+        $producto = Producto::query()->find($this->productoEliminarId);
+
+        if (! $producto) {
+            $this->productoEliminarId = null;
+
+            return;
+        }
+
+        $producto->delete();
+
+        $this->productoEliminarId = null;
+
+        if ($this->productoDetalleId === $producto->id) {
+            $this->productoDetalleId = null;
+        }
+
+        if ($this->productoToggleId === $producto->id) {
+            $this->productoToggleId = null;
+        }
+
+        $this->resetPage();
+
+        session()->flash(
+            'success',
+            "El producto «{$producto->nombre}» fue eliminado."
+        );
     }
 
     public function toggleActivo(): void
@@ -91,6 +133,9 @@ class Productos extends Component
                 : null,
             'productoToggle' => $this->productoToggleId
                 ? Producto::query()->find($this->productoToggleId)
+                : null,
+            'productoEliminar' => $this->productoEliminarId
+                ? Producto::query()->find($this->productoEliminarId)
                 : null,
         ]);
     }

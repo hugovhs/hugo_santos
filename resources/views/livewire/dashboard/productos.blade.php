@@ -116,6 +116,15 @@
                                         <i class="fa-solid fa-power-off" aria-hidden="true"></i>
                                         <span class="sr-only">{{ $producto->activo ? 'Desactivar' : 'Activar' }}</span>
                                     </button>
+                                    <button
+                                        type="button"
+                                        wire:click="confirmarEliminar({{ $producto->id }})"
+                                        title="Eliminar"
+                                        class="rounded-md p-1.5 text-slate-500 transition hover:bg-slate-100 hover:text-rose-600"
+                                    >
+                                        <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                                        <span class="sr-only">Eliminar</span>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -308,6 +317,66 @@
                         class="rounded-md px-4 py-2 text-sm font-semibold text-white shadow-sm transition {{ $productoToggle->activo ? 'bg-rose-600 hover:bg-rose-500' : 'bg-emerald-600 hover:bg-emerald-500' }}"
                     >
                         {{ $productoToggle->activo ? 'Sí, desactivar' : 'Sí, activar' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    {{-- confirmación eliminar --}}
+    @if ($productoEliminar)
+        <div
+            class="fixed inset-0 z-50 flex items-center justify-center p-4"
+            role="dialog"
+            aria-modal="true"
+            aria-label="¿Eliminar el producto {{ $productoEliminar->nombre }}?"
+        >
+            <div
+                class="absolute inset-0 bg-slate-900/60"
+                wire:click="cancelarEliminar"
+                aria-hidden="true"
+            ></div>
+
+            <div class="relative w-full max-w-md rounded-lg bg-white shadow-xl">
+                <div class="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+                    <h2 class="text-base font-semibold text-slate-900">
+                        Eliminar producto
+                    </h2>
+                    <button
+                        type="button"
+                        wire:click="cancelarEliminar"
+                        class="rounded-md p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                        aria-label="Cerrar confirmación"
+                    >
+                        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <div class="space-y-4 px-5 py-5 text-sm text-slate-600">
+                    <p>
+                        ¿Deseas eliminar el producto
+                        <span class="font-semibold text-slate-900">«{{ $productoEliminar->nombre }}»</span>
+                        <span class="font-mono text-xs text-slate-500">({{ $productoEliminar->sku }})</span>?
+                    </p>
+                    <p class="text-xs text-slate-500">
+                        El producto dejará de mostrarse en el catálogo.
+                    </p>
+                </div>
+
+                <div class="flex items-center justify-end gap-3 border-t border-slate-200 px-5 py-4">
+                    <button
+                        type="button"
+                        wire:click="cancelarEliminar"
+                        class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
+                    >
+                        Cancelar
+                    </button>
+                    <button
+                        type="button"
+                        wire:click="eliminar"
+                        class="rounded-md bg-rose-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-rose-500"
+                    >
+                        Sí, eliminar
                     </button>
                 </div>
             </div>
