@@ -1,3 +1,3 @@
 <div>
-    {{-- In work, do what you enjoy. --}}
+    <h1>Dashboard</h1>
 </div>

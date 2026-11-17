@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\Attributes\Title;
 
 class Login extends Component
 {
@@ -10,6 +11,7 @@ class Login extends Component
     public $password;
     public $attempts = 0;
 
+    #[Title('Iniciar sesión')]
     public function login()
     {
         $this->attempts++;
