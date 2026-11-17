@@ -111,7 +111,7 @@ class CrearProducto extends Component
     }
 
     /**
-     * Si convertimos a mxn o usd según lo que escriba el usuario
+     * Convertimos a mxn o usd según lo que escriba el usuario
      */
     protected function convertirPrecio(string $property): void
     {

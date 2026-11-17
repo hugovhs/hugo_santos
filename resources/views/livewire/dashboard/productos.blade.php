@@ -100,15 +100,14 @@
                                         <i class="fa-solid fa-eye" aria-hidden="true"></i>
                                         <span class="sr-only">Ver detalle</span>
                                     </button>
-                                    <button
-                                        type="button"
-                                        disabled
+                                    <a
+                                        href="{{ route('dashboard.productos.editar', $producto) }}"
                                         title="Editar"
-                                        class="rounded-md p-1.5 text-slate-500 transition hover:bg-slate-100 hover:text-indigo-600 disabled:cursor-not-allowed disabled:opacity-50"
+                                        class="rounded-md p-1.5 text-slate-500 transition hover:bg-slate-100 hover:text-indigo-600"
                                     >
                                         <i class="fa-solid fa-pen" aria-hidden="true"></i>
                                         <span class="sr-only">Editar</span>
-                                    </button>
+                                    </a>
                                     <button
                                         type="button"
                                         disabled
