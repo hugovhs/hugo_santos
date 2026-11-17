@@ -93,9 +93,9 @@
                                 <div class="flex items-center justify-center gap-2">
                                     <button
                                         type="button"
-                                        disabled
+                                        wire:click="verDetalle({{ $producto->id }})"
                                         title="Ver detalle"
-                                        class="rounded-md p-1.5 text-slate-500 transition hover:bg-slate-100 hover:text-indigo-600 disabled:cursor-not-allowed disabled:opacity-50"
+                                        class="rounded-md p-1.5 text-slate-500 transition hover:bg-slate-100 hover:text-indigo-600"
                                     >
                                         <i class="fa-solid fa-eye" aria-hidden="true"></i>
                                         <span class="sr-only">Ver detalle</span>
@@ -141,4 +141,95 @@
     <div class="mt-4">
         {{ $productos->links() }}
     </div>
+
+    {{-- Modal: detalle del producto --}}
+    @if ($productoDetalle)
+        <div
+            class="fixed inset-0 z-50 flex items-center justify-center p-4"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Detalle del producto {{ $productoDetalle->nombre }}"
+        >
+            <div
+                class="absolute inset-0 bg-slate-900/60"
+                wire:click="cerrarDetalle"
+                aria-hidden="true"
+            ></div>
+
+            <div class="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-lg bg-white shadow-xl">
+                <div class="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+                    <h2 class="text-base font-semibold text-slate-900">
+                        Detalle del producto
+                    </h2>
+                    <button
+                        type="button"
+                        wire:click="cerrarDetalle"
+                        class="rounded-md p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                        aria-label="Cerrar detalle"
+                    >
+                        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <div class="space-y-5 px-5 py-5">
+                    <div class="flex flex-col items-center text-center">
+                        <img
+                            src="{{ $productoDetalle->imagen ? asset('storage/' . $productoDetalle->imagen) : asset('images/products/placeholder.jpg') }}"
+                            alt="Imagen de {{ $productoDetalle->nombre }}"
+                            onerror="this.onerror=null;this.src='{{ asset('images/products/placeholder.jpg') }}';"
+                            class="h-48 w-48 rounded-lg border border-slate-200 bg-slate-50 object-cover shadow-sm"
+                        >
+                        <p class="mt-3 text-lg font-semibold text-slate-900">{{ $productoDetalle->nombre }}</p>
+                        <div class="mt-2 flex items-center gap-2">
+                            <span class="rounded-md bg-slate-100 px-2 py-0.5 font-mono text-xs text-slate-600">{{ $productoDetalle->sku }}</span>
+                            @if ($productoDetalle->activo)
+                                <span class="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-700">Activo</span>
+                            @else
+                                <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600">Inactivo</span>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-sm font-semibold text-slate-700">Descripción corta</h3>
+                        <p class="mt-1 text-sm text-slate-600">{{ $productoDetalle->descripcion_corta ?: '—' }}</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-sm font-semibold text-slate-700">Descripción larga</h3>
+                        <p class="mt-1 whitespace-pre-line text-sm text-slate-600">{{ $productoDetalle->descripcion_larga ?: '—' }}</p>
+                    </div>
+
+                    <dl class="grid grid-cols-2 gap-3 rounded-lg bg-slate-50 p-4 text-sm">
+                        <div>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Precio USD</dt>
+                            <dd class="mt-0.5 font-semibold text-slate-900">${{ number_format($productoDetalle->precio_usd, 2) }}</dd>
+                        </div>
+                        <div>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Precio MXN</dt>
+                            <dd class="mt-0.5 font-semibold text-slate-900">${{ number_format($productoDetalle->precio_mxn, 2) }}</dd>
+                        </div>
+                        <div>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Stock</dt>
+                            <dd class="mt-0.5 font-semibold text-slate-900">{{ $productoDetalle->stock }}</dd>
+                        </div>
+                        <div>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Vigencia</dt>
+                            <dd class="mt-0.5 font-semibold text-slate-900">{{ $productoDetalle->fecha_vigencia ? \Carbon\Carbon::parse($productoDetalle->fecha_vigencia)->format('d/m/Y') : '—' }}</dd>
+                        </div>
+                    </dl>
+                </div>
+
+                <div class="flex items-center justify-end border-t border-slate-200 px-5 py-4">
+                    <button
+                        type="button"
+                        wire:click="cerrarDetalle"
+                        class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500"
+                    >
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>

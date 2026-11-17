@@ -15,6 +15,18 @@ class Productos extends Component
 
     public string $search = '';
 
+    public ?int $productoDetalleId = null;
+
+    public function verDetalle(int $id): void
+    {
+        $this->productoDetalleId = $id;
+    }
+
+    public function cerrarDetalle(): void
+    {
+        $this->productoDetalleId = null;
+    }
+
     public function updatedSearch(): void
     {
         $this->resetPage();
@@ -39,6 +51,9 @@ class Productos extends Component
 
         return view('livewire.dashboard.productos', [
             'productos' => $productos,
+            'productoDetalle' => $this->productoDetalleId
+                ? Producto::query()->find($this->productoDetalleId)
+                : null,
         ]);
     }
 }
