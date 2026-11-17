@@ -26,13 +26,26 @@
             <p class="mt-1 text-sm text-slate-500">Administrar catálogo de productos.</p>
         </div>
 
-        <a
-            href="{{ route('dashboard.productos.crear') }}"
-            class="inline-flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500"
-        >
-            <i class="fa-solid fa-plus" aria-hidden="true"></i>
-            Agregar producto
-        </a>
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div class="relative">
+                <i class="fa-solid fa-magnifying-glass pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true"></i>
+                <input
+                    type="search"
+                    wire:model.live.debounce.300ms="search"
+                    placeholder="Buscar por nombre o SKU..."
+                    aria-label="Buscar productos por nombre o SKU"
+                    class="w-full rounded-md border border-slate-300 bg-white py-2 pl-9 pr-3 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:w-72"
+                />
+            </div>
+
+            <a
+                href="{{ route('dashboard.productos.crear') }}"
+                class="inline-flex items-center justify-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500"
+            >
+                <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                Agregar producto
+            </a>
+        </div>
     </div>
 
     {{-- Tabla de productos --}}
@@ -101,7 +114,11 @@
                     @empty
                         <tr>
                             <td colspan="7" class="px-4 py-10 text-center text-slate-500">
-                                No hay productos registrados.
+                                @if (trim($search) !== '')
+                                    No se encontraron productos para «{{ $search }}».
+                                @else
+                                    No hay productos registrados.
+                                @endif
                             </td>
                         </tr>
                     @endforelse

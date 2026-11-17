@@ -30,7 +30,6 @@
                     <i class="fa-solid fa-money-bill-transfer mt-0.5" aria-hidden="true"></i>
                     <span>
                         Tipo de cambio: <strong>1 USD = ${{ number_format($tipoCambio, 4) }} MXN</strong>.
-                        Escribe un precio y el otro se calcula automáticamente.
                     </span>
                 </div>
             @elseif ($errorTipoCambio)
