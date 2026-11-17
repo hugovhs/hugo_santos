@@ -89,7 +89,6 @@
                                 @endif
                             </td>
                             <td class="whitespace-nowrap px-4 py-3">
-                                {{-- TODO: conectar acciones (ver detalle, editar, activar/inactivar) --}}
                                 <div class="flex items-center justify-center gap-2">
                                     <button
                                         type="button"
@@ -110,12 +109,12 @@
                                     </a>
                                     <button
                                         type="button"
-                                        disabled
-                                        title="{{ $producto->activo ? 'Inactivar' : 'Activar' }}"
-                                        class="rounded-md p-1.5 text-slate-500 transition hover:bg-slate-100 {{ $producto->activo ? 'hover:text-rose-600' : 'hover:text-emerald-600' }} disabled:cursor-not-allowed disabled:opacity-50"
+                                        wire:click="confirmarToggleActivo({{ $producto->id }})"
+                                        title="{{ $producto->activo ? 'Desactivar' : 'Activar' }}"
+                                        class="rounded-md p-1.5 text-slate-500 transition hover:bg-slate-100 {{ $producto->activo ? 'hover:text-rose-600' : 'hover:text-emerald-600' }}"
                                     >
                                         <i class="fa-solid fa-power-off" aria-hidden="true"></i>
-                                        <span class="sr-only">{{ $producto->activo ? 'Inactivar' : 'Activar' }}</span>
+                                        <span class="sr-only">{{ $producto->activo ? 'Desactivar' : 'Activar' }}</span>
                                     </button>
                                 </div>
                             </td>
@@ -226,6 +225,89 @@
                         class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500"
                     >
                         Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    {{-- confirmación activar/desactivar --}}
+    @if ($productoToggle)
+        <div
+            class="fixed inset-0 z-50 flex items-center justify-center p-4"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Confirmar cambio de estatus del producto {{ $productoToggle->nombre }}"
+        >
+            <div
+                class="absolute inset-0 bg-slate-900/60"
+                wire:click="cancelarToggleActivo"
+                aria-hidden="true"
+            ></div>
+
+            <div class="relative w-full max-w-md rounded-lg bg-white shadow-xl">
+                <div class="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+                    <h2 class="text-base font-semibold text-slate-900">
+                        {{ $productoToggle->activo ? 'Desactivar producto' : 'Activar producto' }}
+                    </h2>
+                    <button
+                        type="button"
+                        wire:click="cancelarToggleActivo"
+                        class="rounded-md p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                        aria-label="Cerrar confirmación"
+                    >
+                        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <div class="space-y-4 px-5 py-5 text-sm text-slate-600">
+                    <p>
+                        ¿Confirmas cambiar el estatus del producto
+                        <span class="font-semibold text-slate-900">«{{ $productoToggle->nombre }}»</span>
+                        <span class="font-mono text-xs text-slate-500">({{ $productoToggle->sku }})</span>?
+                    </p>
+
+                    <dl class="grid grid-cols-[1fr_auto_1fr] items-center gap-3 rounded-lg bg-slate-50 p-4 text-center">
+                        <div>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Estatus actual</dt>
+                            <dd class="mt-1.5">
+                                @if ($productoToggle->activo)
+                                    <span class="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-700">Activo</span>
+                                @else
+                                    <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600">Inactivo</span>
+                                @endif
+                            </dd>
+                        </div>
+                        <div aria-hidden="true" class="text-slate-400">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                        <div>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-slate-500">Nuevo estatus</dt>
+                            <dd class="mt-1.5">
+                                @if ($productoToggle->activo)
+                                    <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600">Inactivo</span>
+                                @else
+                                    <span class="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-700">Activo</span>
+                                @endif
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+
+                <div class="flex items-center justify-end gap-3 border-t border-slate-200 px-5 py-4">
+                    <button
+                        type="button"
+                        wire:click="cancelarToggleActivo"
+                        class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
+                    >
+                        Cancelar
+                    </button>
+                    <button
+                        type="button"
+                        wire:click="toggleActivo"
+                        class="rounded-md px-4 py-2 text-sm font-semibold text-white shadow-sm transition {{ $productoToggle->activo ? 'bg-rose-600 hover:bg-rose-500' : 'bg-emerald-600 hover:bg-emerald-500' }}"
+                    >
+                        {{ $productoToggle->activo ? 'Sí, desactivar' : 'Sí, activar' }}
                     </button>
                 </div>
             </div>
