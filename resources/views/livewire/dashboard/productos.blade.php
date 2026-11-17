@@ -1,19 +1,38 @@
 <div>
+    {{-- Mensaje success (se oculta automáticamente con Alpine) --}}
+    @if (session('success'))
+        <div
+            x-data="{ show: true }"
+            x-init="setTimeout(() => { show = false }, 5000)"
+            x-show="show"
+            x-transition.opacity.duration.300ms
+            role="status"
+            class="mb-4 flex items-center justify-between gap-4 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800"
+        >
+            <span>
+                <i class="fa-solid fa-circle-check mr-2" aria-hidden="true"></i>
+                {{ session('success') }}
+            </span>
+            <button type="button" @click="show = false" class="text-emerald-600 transition hover:text-emerald-800">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                <span class="sr-only">Cerrar</span>
+            </button>
+        </div>
+    @endif
+
     <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
             <h1 class="text-xl font-semibold text-slate-900">Productos</h1>
             <p class="mt-1 text-sm text-slate-500">Administrar catálogo de productos.</p>
         </div>
 
-        {{-- TODO: conectar con el formulario de creación --}}
-        <button
-            type="button"
-            disabled
-            class="inline-flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
+        <a
+            href="{{ route('dashboard.productos.crear') }}"
+            class="inline-flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-500"
         >
             <i class="fa-solid fa-plus" aria-hidden="true"></i>
             Agregar producto
-        </button>
+        </a>
     </div>
 
     {{-- Tabla de productos --}}

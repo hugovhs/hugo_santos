@@ -19,7 +19,7 @@
         </a>
 
         <a href="{{ route('dashboard.productos') }}"
-           class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors {{ request()->is('dashboard.productos') ? 'bg-indigo-600 text-white' : 'hover:bg-slate-800 hover:text-white' }}">
+           class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors {{ request()->routeIs('dashboard.productos*') ? 'bg-indigo-600 text-white' : 'hover:bg-slate-800 hover:text-white' }}">
             <i class="fa-solid fa-box"></i>
             Productos
         </a>
