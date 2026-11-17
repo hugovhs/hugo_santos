@@ -16,7 +16,7 @@
                         <input wire:model="password" type="password" placeholder="Contraseña" class="w-full p-2 rounded-md border border-blue-300 mb-2">
                     </div>
 
-                    <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded-md">Iniciar sesión</button>
+                    <button type="submit" class="w-full bg-indigo-600 text-white p-2 rounded-md">Iniciar sesión</button>
 
                     @if ($errors->any())
                         <div
