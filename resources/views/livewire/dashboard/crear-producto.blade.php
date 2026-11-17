@@ -10,7 +10,7 @@
             href="{{ route('dashboard.productos') }}"
             x-data
             @click.prevent="
-                const sucio = $wire.sku || $wire.nombre || $wire.precio_usd || $wire.precio_mxn;
+                const sucio = $wire.sku || $wire.nombre || $wire.precio_usd || $wire.precio_mxn || $wire.imagen;
                 if (!sucio || confirm('¿Descartar los cambios del producto?')) {
                     window.location.href = $el.href;
                 }
@@ -207,6 +207,47 @@
                     @error('descripcion_larga')
                         <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
                     @enderror
+                </div>
+
+                {{-- Imagen del producto --}}
+                <div class="sm:col-span-2">
+                    <label for="imagen" class="block text-sm font-medium text-slate-700">Imagen del producto</label>
+                    <input
+                        id="imagen"
+                        type="file"
+                        wire:model="imagen"
+                        accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                        class="mt-1 block w-full cursor-pointer rounded-md border border-slate-300 bg-white text-sm text-slate-500 shadow-sm transition file:mr-4 file:cursor-pointer file:rounded-l-md file:border-0 file:bg-indigo-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-indigo-700 hover:file:bg-indigo-100 focus:outline-none focus:ring-2 {{ $errors->has('imagen') ? 'border-rose-400 focus:border-rose-500 focus:ring-rose-100' : 'focus:border-indigo-500 focus:ring-indigo-100' }}"
+                    >
+                    <p class="mt-1 text-xs text-slate-400">Formatos permitidos: JPG, JPEG, PNG o WebP. Máximo 2 MB.</p>
+                    @error('imagen')
+                        <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
+                    @enderror
+
+                    {{-- spinner --}}
+                    <div wire:loading wire:target="imagen" class="mt-2 flex items-center gap-2 text-xs text-indigo-600">
+                        <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+                        Subiendo imagen…
+                    </div>
+
+                    {{-- Vista previa de la imagen --}}
+                    @if ($imagen && $imagen->isPreviewable())
+                        <div class="mt-3 flex items-start gap-3">
+                            <img
+                                src="{{ $imagen->temporaryUrl() }}"
+                                alt="Vista previa de la imagen del producto"
+                                class="h-28 w-28 rounded-md border border-slate-200 object-cover shadow-sm"
+                            >
+                            <button
+                                type="button"
+                                wire:click="$set('imagen', null)"
+                                class="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 transition hover:bg-rose-50 hover:text-rose-600"
+                            >
+                                <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+                                Quitar imagen
+                            </button>
+                        </div>
+                    @endif
                 </div>
 
                 {{-- Estatus --}}

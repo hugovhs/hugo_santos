@@ -7,9 +7,12 @@ use App\Services\ExchangeService;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class CrearProducto extends Component
 {
+    use WithFileUploads;
+
     public $sku = '';
 
     public $nombre = '';
@@ -17,6 +20,8 @@ class CrearProducto extends Component
     public $descripcion_corta = '';
 
     public $descripcion_larga = '';
+
+    public $imagen = null;
 
     public $precio_usd = '';
 
@@ -78,6 +83,11 @@ class CrearProducto extends Component
     public function guardar()
     {
         $validated = $this->validate();
+
+        // Guarda la imagen en disco (storage/app/public/products)
+        $validated['imagen'] = $this->imagen
+            ? $this->imagen->store('products', 'public')
+            : null;
 
         $producto = Producto::create($validated);
 
@@ -145,6 +155,7 @@ class CrearProducto extends Component
             'nombre' => ['required', 'string', 'max:255'],
             'descripcion_corta' => ['nullable', 'string', 'max:500'],
             'descripcion_larga' => ['nullable', 'string', 'max:2000'],
+            'imagen' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'precio_usd' => ['required', 'numeric', 'min:0.01', 'max:99999999.99'],
             'precio_mxn' => ['required', 'numeric', 'min:0.01', 'max:99999999.99'],
             'stock' => ['required', 'integer', 'min:0', 'max:999999999'],
@@ -163,6 +174,10 @@ class CrearProducto extends Component
             'nombre.max' => 'El nombre no debe exceder 255 caracteres.',
             'descripcion_corta.max' => 'La descripción corta no debe exceder 500 caracteres.',
             'descripcion_larga.max' => 'La descripción larga no debe exceder 2000 caracteres.',
+            'imagen.image' => 'El archivo debe ser una imagen.',
+            'imagen.mimes' => 'La imagen debe ser un archivo JPG, JPEG, PNG o WebP.',
+            'imagen.max' => 'La imagen no debe pesar más de 2 MB.',
+            'imagen.uploaded' => 'No se pudo subir la imagen. Intenta con un archivo más pequeño.',
             'precio_usd.required' => 'El precio en USD es obligatorio.',
             'precio_usd.numeric' => 'El precio en USD debe ser un número.',
             'precio_usd.min' => 'El precio en USD debe ser mayor a 0.',
@@ -186,6 +201,7 @@ class CrearProducto extends Component
             'nombre' => 'nombre',
             'descripcion_corta' => 'descripción corta',
             'descripcion_larga' => 'descripción larga',
+            'imagen' => 'imagen',
             'precio_usd' => 'precio en USD',
             'precio_mxn' => 'precio en MXN',
             'stock' => 'stock',

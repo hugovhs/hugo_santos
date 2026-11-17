@@ -54,6 +54,7 @@
             <table class="min-w-full divide-y divide-slate-200 text-sm">
                 <thead class="bg-slate-50">
                     <tr>
+                        <th scope="col" class="px-4 py-3 text-left font-semibold text-slate-700">Imagen</th>
                         <th scope="col" class="px-4 py-3 text-left font-semibold text-slate-700">SKU</th>
                         <th scope="col" class="px-4 py-3 text-left font-semibold text-slate-700">Nombre</th>
                         <th scope="col" class="px-4 py-3 text-right font-semibold text-slate-700">Precio USD</th>
@@ -66,6 +67,15 @@
                 <tbody class="divide-y divide-slate-200">
                     @forelse ($productos as $producto)
                         <tr class="hover:bg-slate-50">
+                            <td class="whitespace-nowrap px-4 py-3">
+                                <img
+                                    src="{{ $producto->imagen ? asset('storage/' . $producto->imagen) : asset('images/products/placeholder.jpg') }}"
+                                    alt="Imagen de {{ $producto->nombre }}"
+                                    loading="lazy"
+                                    onerror="this.onerror=null;this.src='{{ asset('images/products/placeholder.jpg') }}';"
+                                    class="h-10 w-10 rounded-md border border-slate-200 bg-slate-50 object-cover"
+                                >
+                            </td>
                             <td class="whitespace-nowrap px-4 py-3 font-mono text-xs text-slate-600">{{ $producto->sku }}</td>
                             <td class="px-4 py-3 font-medium text-slate-900">{{ $producto->nombre }}</td>
                             <td class="whitespace-nowrap px-4 py-3 text-right text-slate-600">${{ number_format($producto->precio_usd, 2) }}</td>
@@ -113,7 +123,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-4 py-10 text-center text-slate-500">
+                            <td colspan="8" class="px-4 py-10 text-center text-slate-500">
                                 @if (trim($search) !== '')
                                     No se encontraron productos para «{{ $search }}».
                                 @else

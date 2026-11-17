@@ -23,3 +23,7 @@ Después de introducir los datos solicitados, se genera el acceso al dashboard.
 Asegurarse de tener instalado redis-server
 Asegurarse de tener la extensiónn php-redis.
 Configurar servidor redis en .env, normalmente la configuración base de Laravel ya funciona
+
+## Imágenes de productos
+
+Ejecutar `php artisan storage:link` para que se puedan guardar/ver las imágenes
