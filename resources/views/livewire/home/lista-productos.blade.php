@@ -117,11 +117,20 @@
                                             <p class="text-sm whitespace-nowrap text-slate-600">${{ number_format($producto->precio_usd, 2) }} USD</p>
                                         </div>
 
-                                        <button type="button" disabled
-                                            class="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-green-50 px-3 py-2.5 text-sm font-semibold text-green-900">
-                                            <i class="fa-solid fa-cart-plus" aria-hidden="true"></i>
-                                            Añadir al carrito
-                                        </button>
+                                        @if ($producto->stock > 0)
+                                            <button type="button" wire:click="agregarAlCarrito({{ $producto->id }})"
+                                                wire:loading.attr="disabled"
+                                                class="mt-4 flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-green-800 px-3 py-2.5 text-sm font-semibold text-white hover:bg-green-900 focus-visible:outline-2 focus-visible:outline-green-700 disabled:cursor-wait disabled:opacity-70">
+                                                <i class="fa-solid fa-cart-plus" aria-hidden="true"></i>
+                                                Añadir al carrito
+                                            </button>
+                                        @else
+                                            <button type="button" disabled
+                                                class="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-stone-100 px-3 py-2.5 text-sm font-semibold text-slate-500">
+                                                <i class="fa-solid fa-cart-plus" aria-hidden="true"></i>
+                                                Sin stock
+                                            </button>
+                                        @endif
                                     </div>
                                 </div>
                             </li>

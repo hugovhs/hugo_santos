@@ -63,11 +63,7 @@
                     </button>
                 </form>
 
-                <button type="button" disabled aria-label="Carrito"
-                    class="order-1 inline-flex items-center gap-2 justify-self-end rounded-full bg-green-50 px-3 py-2.5 text-green-800 sm:order-3 sm:px-4 lg:order-4">
-                    <i class="fa-solid fa-cart-shopping text-sm" aria-hidden="true"></i>
-                    <span class="min-w-5 rounded-full bg-green-800 px-1 text-center text-xs leading-5 font-semibold text-white" aria-hidden="true">0</span>
-                </button>
+                <livewire:home.contador-carrito />
             </nav>
         </header>
 
@@ -81,6 +77,13 @@
                 <p class="text-sm text-slate-600">© {{ now()->year }} NutriViva. Todos los derechos reservados.</p>
             </div>
         </footer>
+
+        <div x-data="{ visible: false, mensaje: '' }"
+            x-on:carrito-actualizado.window="mensaje = 'Producto añadido al carrito (' + $event.detail.total + ')'; visible = true; clearTimeout($el._t); $el._t = setTimeout(() => visible = false, 2500);"
+            x-show="visible" x-transition style="display: none;" role="status"
+            class="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full bg-green-900 px-5 py-2.5 text-sm font-semibold text-white shadow-lg">
+            <span x-text="mensaje"></span>
+        </div>
 
         @livewireScripts
     </body>

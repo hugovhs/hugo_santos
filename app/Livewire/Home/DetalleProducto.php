@@ -3,6 +3,7 @@
 namespace App\Livewire\Home;
 
 use App\Models\Producto;
+use App\Services\CarritoService;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -33,6 +34,20 @@ class DetalleProducto extends Component
     public function decrementar(): void
     {
         $this->cantidad = $this->normalizarCantidad($this->cantidad - 1);
+    }
+
+    public function agregarAlCarrito(): void
+    {
+        $this->producto->refresh();
+        $this->cantidad = $this->normalizarCantidad($this->cantidad);
+
+        if ($this->cantidad < 1) {
+            return;
+        }
+
+        $total = CarritoService::agregar($this->producto, $this->cantidad);
+
+        $this->dispatch('carrito-actualizado', total: $total);
     }
 
     protected function normalizarCantidad(mixed $value): int

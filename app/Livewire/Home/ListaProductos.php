@@ -4,6 +4,7 @@ namespace App\Livewire\Home;
 
 use App\Models\Categoria;
 use App\Models\Producto;
+use App\Services\CarritoService;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -60,6 +61,19 @@ class ListaProductos extends Component
         $this->reset(['busqueda', 'categoriasSeleccionadas', 'disponibilidad']);
         $this->precioMaximo = $this->precioMaximoCatalogo();
         $this->resetPage();
+    }
+
+    public function agregarAlCarrito(int $productoId): void
+    {
+        $producto = Producto::query()->where('activo', true)->find($productoId);
+
+        if ($producto === null || (int) $producto->stock <= 0) {
+            return;
+        }
+
+        $total = CarritoService::agregar($producto, 1);
+
+        $this->dispatch('carrito-actualizado', total: $total);
     }
 
     protected function precioMinimoCatalogo(): float

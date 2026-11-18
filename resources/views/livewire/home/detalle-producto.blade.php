@@ -70,8 +70,9 @@
                     </button>
                 </div>
 
-                <button type="button" disabled
-                    class="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-green-50 px-6 py-2.5 text-sm font-semibold text-green-900 sm:flex-none sm:px-8">
+                <button type="button" wire:click="agregarAlCarrito" wire:loading.attr="disabled"
+                    @disabled($producto->stock <= 0)
+                    class="inline-flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-full bg-green-800 px-6 py-2.5 text-sm font-semibold text-white hover:bg-green-900 focus-visible:outline-2 focus-visible:outline-green-700 disabled:cursor-default disabled:bg-stone-100 disabled:text-slate-500 sm:flex-none sm:px-8">
                     <i class="fa-solid fa-cart-plus" aria-hidden="true"></i>
                     Agregar al carrito
                 </button>
