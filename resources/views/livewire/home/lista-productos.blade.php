@@ -42,13 +42,22 @@
                         @foreach ($productos as $producto)
                             <li wire:key="producto-{{ $producto->id }}" class="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-stone-200 bg-white">
                                 <div class="flex aspect-[4/3] items-center justify-center bg-stone-50 p-4">
-                                    <img src="{{ $producto->imagen ? asset('storage/' . $producto->imagen) : asset('images/products/placeholder.jpg') }}"
-                                        alt="{{ $producto->imagen ? $producto->nombre : '' }}" loading="lazy"
-                                        class="size-full object-contain">
+                                    <a href="{{ route('home.productos.detalle', $producto) }}" wire:navigate
+                                        class="size-full rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-700"
+                                        aria-label="Ver detalle de {{ $producto->nombre }}">
+                                        <img src="{{ $producto->imagen ? asset('storage/' . $producto->imagen) : asset('images/products/placeholder.jpg') }}"
+                                            alt="{{ $producto->imagen ? $producto->nombre : '' }}" loading="lazy"
+                                            class="size-full object-contain">
+                                    </a>
                                 </div>
 
                                 <div class="flex flex-1 flex-col p-4">
-                                    <h2 class="break-words font-semibold text-slate-900">{{ $producto->nombre }}</h2>
+                                    <h2 class="break-words font-semibold text-slate-900">
+                                        <a href="{{ route('home.productos.detalle', $producto) }}" wire:navigate
+                                            class="rounded hover:text-green-800 hover:underline focus-visible:outline-2 focus-visible:outline-green-700">
+                                            {{ $producto->nombre }}
+                                        </a>
+                                    </h2>
                                     <p class="mt-1 break-words text-xs text-slate-600">SKU {{ $producto->sku }}</p>
 
                                     <div class="mt-auto pt-4">
