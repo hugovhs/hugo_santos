@@ -8,6 +8,57 @@
             </label>
 
             <fieldset class="mt-5 min-w-0 border-t border-stone-200 pt-4">
+                <legend class="sr-only">Precio máximo en MXN</legend>
+                <p aria-hidden="true" class="mb-2 text-sm font-semibold">Precio máximo</p>
+
+                @if ($precioMaximoCatalogo !== null)
+                    <p aria-live="polite" class="text-sm font-bold text-green-900 tabular-nums">
+                        Hasta ${{ number_format((float) $precioMaximo, 2) }} MXN
+                    </p>
+                    <input type="range" wire:model.live="precioMaximo" min="{{ $precioMinimoCatalogo }}"
+                        max="{{ $precioMaximoCatalogo }}" step="1"
+                        @disabled($precioMinimoCatalogo >= $precioMaximoCatalogo)
+                        aria-label="Precio máximo en MXN"
+                        class="mt-2 block w-full accent-green-800 focus-visible:outline-2 focus-visible:outline-green-700">
+                    <div class="mt-1 flex items-center justify-between text-xs text-slate-600 tabular-nums">
+                        <span>${{ number_format($precioMinimoCatalogo, 2) }}</span>
+                        <span>${{ number_format($precioMaximoCatalogo, 2) }}</span>
+                    </div>
+                @else
+                    <p class="text-sm text-slate-600">Aún no hay precios.</p>
+                @endif
+            </fieldset>
+
+            <fieldset class="mt-5 min-w-0 border-t border-stone-200 pt-4">
+                <legend class="sr-only">Disponibilidad</legend>
+                <p aria-hidden="true" class="mb-2 text-sm font-semibold">Disponibilidad</p>
+
+                <ul class="space-y-1">
+                    <li>
+                        <label class="flex cursor-pointer items-start gap-2.5 rounded-lg px-2 py-2 text-sm text-slate-700 hover:bg-green-50">
+                            <input type="radio" value="todos" wire:model.live="disponibilidad"
+                                class="mt-0.5 size-4 shrink-0 accent-green-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-700">
+                            <span>Todos</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="flex cursor-pointer items-start gap-2.5 rounded-lg px-2 py-2 text-sm text-slate-700 hover:bg-green-50">
+                            <input type="radio" value="con" wire:model.live="disponibilidad"
+                                class="mt-0.5 size-4 shrink-0 accent-green-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-700">
+                            <span>Con inventario</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label class="flex cursor-pointer items-start gap-2.5 rounded-lg px-2 py-2 text-sm text-slate-700 hover:bg-green-50">
+                            <input type="radio" value="sin" wire:model.live="disponibilidad"
+                                class="mt-0.5 size-4 shrink-0 accent-green-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-700">
+                            <span>Sin inventario</span>
+                        </label>
+                    </li>
+                </ul>
+            </fieldset>
+
+            <fieldset class="mt-5 min-w-0 border-t border-stone-200 pt-4">
                 <legend class="sr-only">Categorías</legend>
                 <p aria-hidden="true" class="mb-2 text-sm font-semibold">Categorías</p>
 
