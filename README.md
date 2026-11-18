@@ -27,3 +27,11 @@ Configurar servidor redis en .env, normalmente la configuración base de Laravel
 ## Imágenes de productos
 
 Ejecutar `php artisan storage:link` para que se puedan guardar/ver las imágenes
+
+## API para tipo de cambio
+
+Para consultar el tipo de cambio se usa la API https://api.frankfurter.dev/v2/rate/USD/MXN, la cual es publica y no requiere token. Se creo un servicio con la lógica solicitada para guardar/consultar en redis y ahorrar llamadas a la API.
+
+## API de pagos
+
+Se genero una API dentro de este mismo proyecto con el endpoint "api/pagos", se envían los datos de la tarjeta y responde con un success o fail.

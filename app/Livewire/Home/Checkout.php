@@ -45,6 +45,7 @@ class Checkout extends Component
     public string $tarjeta_nombre = '';
 
     public ?string $pagoError = null;
+    public ?string $stockError = null;
     public bool $procesando = false;
 
     public function mount(): void
@@ -188,6 +189,7 @@ class Checkout extends Component
         }
 
         $this->pagoError = null;
+        $this->stockError = null;
 
         $this->validate([
             'correo' => ['required', 'email'],
@@ -226,6 +228,32 @@ class Checkout extends Component
 
         if ($carrito === []) {
             $this->redirectRoute('home.carrito', navigate: true);
+
+            return;
+        }
+
+        // Verificar stock antes de cobrar
+        $productosStock = Producto::query()
+            ->whereKey(array_keys($carrito))
+            ->get(['id', 'nombre', 'stock', 'activo']);
+
+        if ($productosStock->count() !== count($carrito)) {
+            $this->stockError = 'Algunos productos de tu carrito ya no están disponibles. Revísalo e intenta de nuevo.';
+
+            return;
+        }
+
+        $faltantes = [];
+        foreach ($productosStock as $producto) {
+            $cantidad = $carrito[$producto->id] ?? 0;
+
+            if (! $producto->activo || (int) $producto->stock < $cantidad) {
+                $faltantes[] = $producto->nombre;
+            }
+        }
+
+        if ($faltantes !== []) {
+            $this->stockError = 'No hay stock suficiente para: '.implode(', ', $faltantes).'. Ajusta tu carrito e intenta de nuevo.';
 
             return;
         }
@@ -280,12 +308,26 @@ class Checkout extends Component
 
                 $productos = Producto::query()
                     ->whereKey(array_keys($carrito))
-                    ->get(['id', 'precio_usd', 'precio_mxn', 'stock', 'activo']);
+                    ->lockForUpdate()
+                    ->get(['id', 'nombre', 'precio_usd', 'precio_mxn', 'stock', 'activo']);
 
+                // Limita cada cantidad al stock disponible para que el inventario nunca quede en negativo.
+                $lineas = [];
                 $subtotal = 0;
                 foreach ($productos as $producto) {
-                    $cantidad = $carrito[$producto->id] ?? 0;
+                    $solicitada = $carrito[$producto->id] ?? 0;
+                    $cantidad = min($solicitada, max(0, (int) $producto->stock));
+
+                    if ($cantidad <= 0) {
+                        continue;
+                    }
+
+                    $lineas[] = ['producto' => $producto, 'cantidad' => $cantidad];
                     $subtotal += round((float) $producto->precio_mxn * $cantidad, 2);
+                }
+
+                if ($lineas === []) {
+                    throw new \RuntimeException('Sin stock disponible para los productos del carrito.');
                 }
                 $subtotal = round($subtotal, 2);
                 $impuestos = round($subtotal * self::IVA_TASA, 2);
@@ -303,12 +345,12 @@ class Checkout extends Component
                     'fecha' => now(),
                 ]);
 
-                foreach ($productos as $producto) {
-                    $cantidad = $carrito[$producto->id] ?? 0;
+                foreach ($lineas as $linea) {
+                    $producto = $linea['producto'];
+                    $cantidad = $linea['cantidad'];
 
-                    if ($cantidad <= 0) {
-                        continue;
-                    }
+                    // Descuenta el inventario (la cantidad ya está limitada al stock, nunca queda en negativo).
+                    $producto->decrement('stock', $cantidad);
 
                     $pedido->detalles()->create([
                         'producto_id' => $producto->id,
@@ -325,6 +367,9 @@ class Checkout extends Component
             $this->dispatch('carrito-actualizado', total: 0);
 
             $this->redirectRoute('home.checkout.success', ['folio' => $pedido->folio], navigate: true);
+        } catch (\RuntimeException $e) {
+            // El stock se agotó mientras se procesaba el pago: no se generó orden.
+            $this->stockError = 'El stock cambió mientras se procesaba tu pago. Revisa tu carrito e intenta de nuevo.';
         } finally {
             $this->procesando = false;
         }
