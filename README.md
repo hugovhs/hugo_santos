@@ -1,50 +1,83 @@
-# Definición del proyecto
+# NutriViva
 
-Proyecto de evaluación. Forma parte de la evaluación técnica para el equipo de desarrollo.
+Tienda en línea desarrollada como evaluación técnica. Incluye catálogo de productos, carrito, compra como invitado y un panel para administrar productos y categorías.
 
-## Versión Live
+## Demo
 
-En seguida se describen configuraciones y primeros pasos, sin embargo, una versión "live" de este proyecto se puede usar desde: https://test.hugovhs.dev
+- Tienda: [test.hugovhs.dev](https://test.hugovhs.dev)
+- Panel: [test.hugovhs.dev/dashboard](https://test.hugovhs.dev/dashboard)
+- Usuario: `hugo_vhs@msn.com`
+- Contraseña: `admin123`
 
-Para ingresar al dashboard como admin https://test.hugovhs.dev/dashboard
+## Requisitos
 
-Credenciales:
-usuario: hugo_vhs@msn.com
-contraseña: admin123
+- PHP 8.2 o superior, Composer y las extensiones necesarias para Laravel y la base de datos elegida.
+- Node.js y npm para compilar los recursos con Vite.
+- MySQL o una base de datos compatible configurada en Laravel.
+- Redis y la extensión PHP `phpredis` para consultar y almacenar el tipo de cambio.
 
-## Instalación y primeros pasos
+El proyecto utiliza Laravel 12, Livewire 3, Tailwind CSS 4 y Vite.
 
-- Crear base de datos
-- Añadir base de datos, usuario y contraseña al .env
-- Ejecutar `composer install` para instalar dependencias
-- Ejecutar migraciones `php artisan migrate`
-- Ejecutar `npm install` para instalar componentes Tailwind, iconos y poder generar estilos
-- Ejecutar `npm run build` para generar estilos.
+## Instalación local
 
-## Crear el primero usuario administrador
+1. Instala las dependencias y crea el archivo de configuración:
 
-Para poder ingresar al dashboard es necesario contar con credenciales válidas, para agilizar y hacer más fácil el proceso se ha generado un comando artisan, ejecuta:
+   ```bash
+   composer install
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-``` bash
-php artisan admin:generate
-```
+2. Configura la base de datos en `.env`. Para usar SQLite, la opción predeterminada, crea el archivo:
 
-Después de introducir los datos solicitados, se genera el acceso al dashboard.
+   ```bash
+   touch database/database.sqlite
+   ```
 
-## Redis
+   Para MySQL o MariaDB, crea la base de datos y configura `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` y `DB_PASSWORD`.
 
-Asegurarse de tener instalado redis-server
-Asegurarse de tener la extensiónn php-redis.
-Configurar servidor redis en .env, normalmente la configuración base de Laravel ya funciona
+3. Configura Redis en `.env` y asegúrate de que el servidor esté en ejecución. Ajusta `REDIS_HOST`, `REDIS_PORT` y `REDIS_PASSWORD` según tu entorno. Configura también la URL del tipo de cambio:
 
-## Imágenes de productos
+   ```dotenv
+   EXCHANGE_RATE_API=https://api.frankfurter.dev/v2/rate/USD/MXN
+   ```
 
-Ejecutar `php artisan storage:link` para que se puedan guardar/ver las imágenes
+   La URL incluida en `.env.example` es distinta; el servicio espera una respuesta JSON con un campo numérico `rate`.
 
-## API para tipo de cambio
+4. Prepara las tablas, el acceso a imágenes y los recursos:
 
-Para consultar el tipo de cambio se usa la API https://api.frankfurter.dev/v2/rate/USD/MXN, la cual es publica y no requiere token. Se creo un servicio con la lógica solicitada para guardar/consultar en redis y ahorrar llamadas a la API.
+   ```bash
+   php artisan migrate
+   php artisan storage:link
+   npm install
+   npm run build
+   ```
 
-## API de pagos
+5. Crea un administrador siguiendo las indicaciones del comando:
 
-Se genero una API dentro de este mismo proyecto con el endpoint "api/pagos", se envían los datos de la tarjeta y responde con un success o fail.
+   ```bash
+   php artisan admin:generate
+   ```
+
+6. Inicia la aplicación:
+
+   ```bash
+   PHP_CLI_SERVER_WORKERS=4 php artisan serve
+   ```
+
+   Abre [http://localhost:8000](http://localhost:8000) o entra al panel en `/dashboard`.
+   
+El checkout llama a la API de pagos de la misma aplicación; el servidor local necesita poder atender esa petición mientras procesa la compra. Ajusta `APP_URL` si utilizas otra dirección o puerto.
+
+Para desarrollar los estilos y scripts con recarga automática, ejecuta `npm run dev` en otra terminal en lugar de depender de la compilación de `npm run build` que se usa para producción.
+
+## Funcionalidades
+
+- Catálogo y detalle de productos, con carrito de compra.
+- Compra como invitado con correo, dirección y pago simulado. Al generar el pedido se descuenta el inventario disponible.
+- Panel protegido por autenticación para gestionar productos y categorías, con imágenes y búsqueda de productos.
+- Conversión entre USD y MXN mediante `ExchangeService`. Redis conserva la tasa durante seis horas; si una consulta HTTP no devuelve una tasa válida, se utiliza la última tasa almacenada, si existe.
+
+## Pago simulado
+
+`POST /api/pagos` valida los datos de tarjeta y simula una respuesta: tiene un 70 % de probabilidad de éxito y una demora de tres segundos. No conecta con una pasarela real; utiliza únicamente datos ficticios para probarlo. El checkout envía la solicitud a esta ruta usando `APP_URL`.
