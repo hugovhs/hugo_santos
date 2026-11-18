@@ -15,4 +15,14 @@ class PedidoDetalle extends Model
         'precio_mxn'
     ];
     public $timestamps = false;
+
+    public function producto()
+    {
+        return $this->belongsTo(Producto::class, 'producto_id');
+    }
+
+    public function pedido()
+    {
+        return $this->belongsTo(Pedido::class, 'pedido_id');
+    }
 }
