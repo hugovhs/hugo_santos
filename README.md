@@ -2,11 +2,24 @@
 
 Proyecto de evaluación. Forma parte de la evaluación técnica para el equipo de desarrollo.
 
+## Versión Live
+
+En seguida se describen configuraciones y primeros pasos, sin embargo, una versión "live" de este proyecto se puede usar desde: https://test.hugovhs.dev
+
+Para ingresar al dashboard como admin https://test.hugovhs.dev/dashboard
+
+Credenciales:
+usuario: hugo_vhs@msn.com
+contraseña: admin123
+
 ## Instalación y primeros pasos
 
 - Crear base de datos
 - Añadir base de datos, usuario y contraseña al .env
+- Ejecutar `composer install` para instalar dependencias
 - Ejecutar migraciones `php artisan migrate`
+- Ejecutar `npm install` para instalar componentes Tailwind, iconos y poder generar estilos
+- Ejecutar `npm run build` para generar estilos.
 
 ## Crear el primero usuario administrador
 
