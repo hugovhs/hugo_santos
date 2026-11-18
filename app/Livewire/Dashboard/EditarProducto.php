@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Dashboard;
 
+use App\Models\Categoria;
 use App\Models\Producto;
 use App\Services\ExchangeService;
 use Illuminate\Support\Facades\Storage;
@@ -39,6 +40,8 @@ class EditarProducto extends Component
 
     public $activo = true;
 
+    public $categoria_id = '';
+
     // Tipo de cambio USD -> MXN obtenido del ExchangeService
     public $tipoCambio = null;
 
@@ -59,13 +62,16 @@ class EditarProducto extends Component
             ? (string) \Illuminate\Support\Carbon::parse($producto->fecha_vigencia)->format('Y-m-d')
             : null;
         $this->activo = (bool) $producto->activo;
+        $this->categoria_id = $producto->categorias()->value('categorias.id') ?? '';
     }
 
     #[Title('Editar producto')]
     #[Layout('components.layouts.admin')]
     public function render()
     {
-        return view('livewire.dashboard.editar-producto');
+        return view('livewire.dashboard.editar-producto', [
+            'categorias' => Categoria::query()->orderBy('nombre')->get(),
+        ]);
     }
 
     /**
@@ -118,7 +124,14 @@ class EditarProducto extends Component
 
         $this->nombre = $this->normalizarNombre((string) $this->nombre);
 
+        if ($this->categoria_id === '') {
+            $this->categoria_id = null;
+        }
+
         $validated = $this->validate();
+
+        $categoriaId = $validated['categoria_id'] ?? null;
+        unset($validated['categoria_id']);
 
         // Si se subió una imagen nueva, reemplazar la anterior.
         if ($this->imagen) {
@@ -134,6 +147,12 @@ class EditarProducto extends Component
         }
 
         $this->producto->update($validated);
+
+        if ($categoriaId) {
+            $this->producto->categorias()->sync([$categoriaId]);
+        } else {
+            $this->producto->categorias()->detach();
+        }
 
         $this->imagen = null;
         $this->imagen_actual = $this->producto->fresh()->imagen;
@@ -237,6 +256,7 @@ class EditarProducto extends Component
             'stock' => ['required', 'integer', 'min:0', 'max:999999999'],
             'fecha_vigencia' => ['required', 'date'],
             'activo' => ['required', 'boolean'],
+            'categoria_id' => ['nullable', 'exists:categorias,id'],
         ];
     }
 
@@ -272,6 +292,7 @@ class EditarProducto extends Component
             'fecha_vigencia.required' => 'La fecha de vigencia es obligatoria.',
             'fecha_vigencia.date' => 'La fecha de vigencia no es válida.',
             'activo.required' => 'El estatus es obligatorio.',
+            'categoria_id.exists' => 'La categoría seleccionada no es válida.',
         ];
     }
 
@@ -288,6 +309,7 @@ class EditarProducto extends Component
             'stock' => 'stock',
             'fecha_vigencia' => 'fecha de vigencia',
             'activo' => 'estatus',
+            'categoria_id' => 'categoría',
         ];
     }
 }

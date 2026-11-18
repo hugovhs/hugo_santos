@@ -169,6 +169,25 @@
                     @enderror
                 </div>
 
+                {{-- Categoría --}}
+                <div class="sm:col-span-2">
+                    <label for="categoria_id" class="block text-sm font-medium text-slate-700">Categoría</label>
+                    <select
+                        id="categoria_id"
+                        wire:model.live="categoria_id"
+                        class="mt-1 block w-full rounded-md border px-3 py-2 text-sm shadow-sm transition focus:outline-none focus:ring-2 {{ $errors->has('categoria_id') ? 'border-rose-400 focus:border-rose-500 focus:ring-rose-100' : 'border-slate-300 focus:border-indigo-500 focus:ring-indigo-100' }}"
+                    >
+                        <option value="">Sin categoría</option>
+                        @foreach ($categorias as $categoria)
+                            <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
+                        @endforeach
+                    </select>
+                    <p class="mt-1 text-xs text-slate-400">Un producto solo puede tener una categoría.</p>
+                    @error('categoria_id')
+                        <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 {{-- Descripción corta --}}
                 <div class="sm:col-span-2" x-data>
                     <div class="flex items-center justify-between">

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Dashboard;
 
+use App\Models\Categoria;
 use App\Models\Producto;
 use App\Services\ExchangeService;
 use Livewire\Attributes\Layout;
@@ -33,6 +34,8 @@ class CrearProducto extends Component
 
     public $activo = true;
 
+    public $categoria_id = '';
+
     // Tipo de cambio USD -> MXN obtenido del ExchangeService
     public $tipoCambio = null;
 
@@ -42,7 +45,9 @@ class CrearProducto extends Component
     #[Layout('components.layouts.admin')]
     public function render()
     {
-        return view('livewire.dashboard.crear-producto');
+        return view('livewire.dashboard.crear-producto', [
+            'categorias' => Categoria::query()->orderBy('nombre')->get(),
+        ]);
     }
 
     /**
@@ -96,7 +101,14 @@ class CrearProducto extends Component
 
         $this->nombre = $this->normalizarNombre((string) $this->nombre);
 
+        if ($this->categoria_id === '') {
+            $this->categoria_id = null;
+        }
+
         $validated = $this->validate();
+
+        $categoriaId = $validated['categoria_id'] ?? null;
+        unset($validated['categoria_id']);
 
         // Guarda la imagen en disco (storage/app/public/products)
         $validated['imagen'] = $this->imagen
@@ -104,6 +116,10 @@ class CrearProducto extends Component
             : null;
 
         $producto = Producto::create($validated);
+
+        if ($categoriaId) {
+            $producto->categorias()->sync([$categoriaId]);
+        }
 
         session()->flash('success', "Producto {$producto->sku} creado correctamente.");
 
@@ -205,6 +221,7 @@ class CrearProducto extends Component
             'stock' => ['required', 'integer', 'min:0', 'max:999999999'],
             'fecha_vigencia' => ['required', 'date'],
             'activo' => ['required', 'boolean'],
+            'categoria_id' => ['nullable', 'exists:categorias,id'],
         ];
     }
 
@@ -241,6 +258,7 @@ class CrearProducto extends Component
             'fecha_vigencia.required' => 'La fecha de vigencia es obligatoria.',
             'fecha_vigencia.date' => 'La fecha de vigencia no es válida.',
             'activo.required' => 'El estatus es obligatorio.',
+            'categoria_id.exists' => 'La categoría seleccionada no es válida.',
         ];
     }
 
@@ -257,6 +275,7 @@ class CrearProducto extends Component
             'stock' => 'stock',
             'fecha_vigencia' => 'fecha de vigencia',
             'activo' => 'estatus',
+            'categoria_id' => 'categoría',
         ];
     }
 }

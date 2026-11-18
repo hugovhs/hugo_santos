@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Producto extends Model
 {
@@ -21,4 +22,19 @@ class Producto extends Model
         'fecha_vigencia',
         'activo'
     ];
+
+    public function categorias(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Categoria::class,
+            'producto_categoria',
+            'producto_id',
+            'categoria_id'
+        );
+    }
+
+    public function categoria(): ?Categoria
+    {
+        return $this->categorias()->first();
+    }
 }

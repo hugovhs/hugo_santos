@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Dashboard;
+use App\Livewire\Dashboard\Categorias;
 use App\Livewire\Dashboard\CrearProducto;
 use App\Livewire\Dashboard\EditarProducto;
 use App\Livewire\Dashboard\Productos;
@@ -21,4 +22,5 @@ Route::group(['middleware' => 'auth', 'prefix' => 'dashboard'], function () {
     Route::get('/productos', Productos::class)->name('dashboard.productos');
     Route::get('/productos/crear', CrearProducto::class)->name('dashboard.productos.crear');
     Route::get('/productos/{producto}/editar', EditarProducto::class)->name('dashboard.productos.editar');
+    Route::get('/categorias', Categorias::class)->name('dashboard.categorias');
 });
