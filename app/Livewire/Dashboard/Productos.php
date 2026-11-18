@@ -114,14 +114,7 @@ class Productos extends Component
     public function render()
     {
         $productos = Producto::query()
-            ->when(trim($this->search) !== '', function ($query) {
-                $term = '%' . trim($this->search) . '%';
-
-                $query->where(function ($q) use ($term) {
-                    $q->where('nombre', 'like', $term)
-                        ->orWhere('sku', 'like', $term);
-                });
-            })
+            ->buscar($this->search)
             ->orderBy('id', 'desc')
             ->paginate(10)
             ->withQueryString();

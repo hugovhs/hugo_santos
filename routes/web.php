@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Home\Index;
+use App\Livewire\Home\ListaProductos;
 use App\Livewire\Dashboard;
 use App\Livewire\Dashboard\Categorias;
 use App\Livewire\Dashboard\CrearProducto;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 
 // Home page
 Route::get('/', Index::class)->name('home.index');
+Route::get('/productos', ListaProductos::class)->name('home.productos');
 
 // Login page
 Route::get('/login', Login::class)->name('login');

@@ -38,7 +38,13 @@
                         <ul id="categorias-nav" x-show="abierto" @click.outside="abierto = false" style="display: none;"
                             class="absolute left-0 z-20 mt-2 max-h-72 w-44 overflow-y-auto rounded-xl border border-stone-200 bg-white p-2 shadow-lg sm:w-56">
                             @forelse ($categorias as $categoria)
-                                <li class="break-words px-3 py-2 text-sm text-slate-700">{{ $categoria }}</li>
+                                <li>
+                                    <a href="{{ route('home.productos', ['categoria' => $categoria->id]) }}" wire:navigate
+                                        @click="abierto = false"
+                                        class="block rounded-lg px-3 py-2 text-sm break-words text-slate-700 hover:bg-green-50 hover:text-green-800 focus-visible:outline-2 focus-visible:outline-green-700">
+                                        {{ $categoria->nombre }}
+                                    </a>
+                                </li>
                             @empty
                                 <li class="px-3 py-2 text-sm text-slate-600">Aún no hay categorías.</li>
                             @endforelse
@@ -46,12 +52,16 @@
                     </div>
                 </div>
 
-                <div class="relative order-4 col-span-full w-full lg:order-3 lg:col-span-1 lg:max-w-sm lg:justify-self-end">
+                <form method="get" action="{{ route('home.productos') }}" role="search"
+                    class="relative order-4 col-span-full w-full lg:order-3 lg:col-span-1 lg:max-w-sm lg:justify-self-end">
                     <label for="buscar-productos" class="sr-only">Buscar productos</label>
-                    <i class="fa-solid fa-magnifying-glass pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-sm text-slate-500" aria-hidden="true"></i>
-                    <input id="buscar-productos" type="search" placeholder="Buscar productos" disabled
-                        class="w-full rounded-full border border-stone-200 bg-stone-50 py-2.5 pr-4 pl-10 text-sm placeholder:text-slate-600">
-                </div>
+                    <input id="buscar-productos" type="search" name="q" placeholder="Buscar por nombre o SKU"
+                        class="w-full rounded-full border border-stone-200 bg-stone-50 py-2.5 pr-12 pl-4 text-sm placeholder:text-slate-600 focus-visible:outline-2 focus-visible:outline-green-700">
+                    <button type="submit" aria-label="Buscar"
+                        class="absolute inset-y-1 right-1 grid w-9 cursor-pointer place-items-center rounded-full text-sm text-green-800 hover:bg-green-100 focus-visible:outline-2 focus-visible:outline-green-700">
+                        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                    </button>
+                </form>
 
                 <button type="button" disabled aria-label="Carrito"
                     class="order-1 inline-flex items-center gap-2 justify-self-end rounded-full bg-green-50 px-3 py-2.5 text-green-800 sm:order-3 sm:px-4 lg:order-4">

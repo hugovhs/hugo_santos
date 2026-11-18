@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('components.layouts.home', function (BladeView $view): void {
-            $view->with('categorias', Categoria::query()->orderBy('nombre')->pluck('nombre'));
+            $view->with('categorias', Categoria::query()->orderBy('nombre')->get(['id', 'nombre']));
         });
     }
 }
