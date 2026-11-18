@@ -48,6 +48,7 @@ class DetalleProducto extends Component
         $total = CarritoService::agregar($this->producto, $this->cantidad);
 
         $this->dispatch('carrito-actualizado', total: $total);
+        $this->dispatch('carrito-mensaje', mensaje: 'Producto añadido al carrito');
     }
 
     protected function normalizarCantidad(mixed $value): int

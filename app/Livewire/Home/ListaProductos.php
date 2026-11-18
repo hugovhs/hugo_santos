@@ -74,6 +74,7 @@ class ListaProductos extends Component
         $total = CarritoService::agregar($producto, 1);
 
         $this->dispatch('carrito-actualizado', total: $total);
+        $this->dispatch('carrito-mensaje', mensaje: 'Producto añadido al carrito');
     }
 
     protected function precioMinimoCatalogo(): float

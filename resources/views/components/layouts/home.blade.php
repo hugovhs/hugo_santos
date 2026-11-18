@@ -79,7 +79,7 @@
         </footer>
 
         <div x-data="{ visible: false, mensaje: '' }"
-            x-on:carrito-actualizado.window="mensaje = 'Producto añadido al carrito (' + $event.detail.total + ')'; visible = true; clearTimeout($el._t); $el._t = setTimeout(() => visible = false, 2500);"
+            x-on:carrito-mensaje.window="mensaje = $event.detail.mensaje; visible = true; clearTimeout($el._t); $el._t = setTimeout(() => visible = false, 2500);"
             x-show="visible" x-transition style="display: none;" role="status"
             class="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full bg-green-900 px-5 py-2.5 text-sm font-semibold text-white shadow-lg">
             <span x-text="mensaje"></span>

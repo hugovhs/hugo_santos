@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Home\Carrito;
 use App\Livewire\Home\DetalleProducto;
 use App\Livewire\Home\Index;
 use App\Livewire\Home\ListaProductos;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 // Home page
 Route::get('/', Index::class)->name('home.index');
+Route::get('/carrito', Carrito::class)->name('home.carrito');
 Route::get('/productos', ListaProductos::class)->name('home.productos');
 Route::get('/productos/{producto}', DetalleProducto::class)->name('home.productos.detalle');
 

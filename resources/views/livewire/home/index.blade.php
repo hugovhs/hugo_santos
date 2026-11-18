@@ -7,11 +7,11 @@
             <p class="mt-5 max-w-sm text-base leading-relaxed text-slate-700 sm:text-lg">
                 Encuentra suplementos y productos de bienestar para acompañar tu rutina.
             </p>
-            <button type="button" disabled
+            <a href="{{ route('home.productos') }}" wire:navigate
                 class="mt-8 inline-flex items-center gap-3 rounded-full bg-green-800 px-6 py-3.5 text-sm font-semibold text-white">
                 Ver productos
                 <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-            </button>
+            </a>
         </div>
 
         <img src="{{ asset('images/nutriviva-hero.webp') }}" width="1280" height="960" alt=""
