@@ -1,6 +1,6 @@
 <section class="mx-auto max-w-7xl px-4 py-8 sm:px-8 sm:py-12">
-    <div class="grid gap-6 lg:grid-cols-[15rem_minmax(0,1fr)] lg:items-start lg:gap-8">
-        <aside aria-label="Filtros de productos" class="rounded-2xl border border-stone-200 bg-stone-50 p-5">
+    <div class="flex flex-col gap-6 md:flex-row md:items-start lg:gap-8">
+        <aside aria-label="Filtros de productos" class="rounded-2xl border border-stone-200 bg-stone-50 p-5 md:w-48 md:shrink-0 lg:w-60">
             <label class="block text-sm font-semibold">
                 Buscar en el catálogo
                 <input type="search" wire:model.live.debounce.300ms="busqueda" placeholder="Nombre o SKU"
@@ -28,7 +28,7 @@
             </fieldset>
         </aside>
 
-        <section aria-label="Resultados del catálogo">
+        <section aria-label="Resultados del catálogo" class="min-w-0 flex-1">
             <div class="mb-5">
                 <h1 class="text-3xl font-bold tracking-tight text-[#112e3e] sm:text-4xl">Productos</h1>
                 <p aria-live="polite" class="mt-2 text-sm text-slate-600">
