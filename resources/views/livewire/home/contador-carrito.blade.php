@@ -53,13 +53,13 @@
 
             <div class="mt-3 grid grid-cols-2 gap-2">
                 <a href="{{ route('home.carrito') }}" wire:navigate @click="abierto = false"
-                    class="inline-flex items-center justify-center rounded-full bg-green-800 px-3 py-1.5 text-sm font-semibold text-white hover:bg-green-900 focus-visible:outline-2 focus-visible:outline-green-700">
+                    class="inline-flex items-center justify-center rounded-full bg-green-800 px-3 py-1.5 text-center text-sm leading-tight font-semibold text-white hover:bg-green-900 focus-visible:outline-2 focus-visible:outline-green-700">
                     Ver carrito
                 </a>
-                <button type="button" disabled title="Disponible próximamente"
-                    class="inline-flex cursor-not-allowed items-center justify-center rounded-full bg-stone-100 px-3 py-1.5 text-sm font-semibold text-slate-500">
+                <a href="{{ route('home.checkout') }}" wire:navigate @click="abierto = false"
+                    class="inline-flex items-center justify-center rounded-full bg-green-100 px-3 py-1.5 text-center text-sm leading-tight font-semibold text-green-900 hover:bg-green-200 focus-visible:outline-2 focus-visible:outline-green-700">
                     Seguir con la compra
-                </button>
+                </a>
             </div>
         @else
             <p class="mt-3 rounded-xl bg-stone-50 px-4 py-6 text-center text-sm text-slate-600">

@@ -104,11 +104,11 @@
                         </div>
                     </dl>
 
-                    <button type="button" disabled title="Disponible próximamente"
-                        class="mt-4 flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-full bg-stone-200 px-6 py-2.5 text-sm font-semibold text-slate-500">
+                    <a href="{{ route('home.checkout') }}" wire:navigate
+                        class="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-green-800 px-6 py-2.5 text-sm font-semibold text-white hover:bg-green-900 focus-visible:outline-2 focus-visible:outline-green-700">
                         <i class="fa-solid fa-lock" aria-hidden="true"></i>
                         Continuar compra
-                    </button>
+                    </a>
 
                     <a href="{{ route('home.productos') }}" wire:navigate
                         class="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-2.5 text-sm font-semibold text-green-800 hover:bg-green-50 hover:underline focus-visible:outline-2 focus-visible:outline-green-700">
