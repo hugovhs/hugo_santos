@@ -1,17 +1,17 @@
 <?php
 
+use App\Livewire\Home\Index;
 use App\Livewire\Dashboard;
 use App\Livewire\Dashboard\Categorias;
 use App\Livewire\Dashboard\CrearProducto;
 use App\Livewire\Dashboard\EditarProducto;
 use App\Livewire\Dashboard\Productos;
 use App\Livewire\Login;
+
 use Illuminate\Support\Facades\Route;
 
 // Home page
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', Index::class)->name('home.index');
 
 // Login page
 Route::get('/login', Login::class)->name('login');

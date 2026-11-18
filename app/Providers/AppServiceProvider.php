@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Categoria;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\View\View as BladeView;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +22,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        View::composer('components.layouts.home', function (BladeView $view): void {
+            $view->with('categorias', Categoria::query()->orderBy('nombre')->pluck('nombre'));
+        });
     }
 }
